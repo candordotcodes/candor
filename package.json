@@ -1,8 +1,10 @@
 {
   "name": "@candor/proxy",
   "version": "0.1.0",
-  "description": "MCP proxy for observability",
+  "description": "MCP proxy for observability, cost tracking, and real-time monitoring",
   "type": "module",
-  "scripts": { "build": "tsc" },
+  "scripts": { "build": "tsc", "dev": "tsx src/cli.ts" },
+  "devDependencies": { "@types/node": "^20.0.0", "tsx": "^4.0.0", "typescript": "^5.0.0" },
+  "engines": { "node": ">=20.0.0" },
   "license": "MIT"
 }
