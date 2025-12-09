@@ -1,34 +1,73 @@
 import { EventEmitter } from "node:events";
-
-export interface JsonRpcMessage {
-  jsonrpc: "2.0"; id?: string | number; method?: string;
-  params?: unknown; result?: unknown;
-  error?: { code: number; message: string; data?: unknown };
-}
-
-export interface InterceptedMessage {
-  raw: string; parsed: JsonRpcMessage; direction: "request" | "response";
-  timestamp: Date; matchedRequestId?: string | number;
-  method?: string; latencyMs?: number;
-}
-
 export class Interceptor extends EventEmitter {
-  private pending = new Map<string|number, { method: string; timestamp: Date }>();
-  parseMessage(raw: string, dir: "request"|"response"): InterceptedMessage | null {
-    try {
-      const p = JSON.parse(raw) as JsonRpcMessage;
-      if (p.jsonrpc !== "2.0") return null;
-      const ts = new Date();
-      const r: InterceptedMessage = { raw, parsed: p, direction: dir, timestamp: ts };
-      if (dir === "request" && p.method && p.id !== undefined) {
-        this.pending.set(p.id, { method: p.method, timestamp: ts });
-        r.method = p.method;
-      } else if (dir === "response" && p.id !== undefined) {
-        const pend = this.pending.get(p.id);
-        if (pend) { r.matchedRequestId = p.id; r.method = pend.method; r.latencyMs = ts.getTime() - pend.timestamp.getTime(); this.pending.delete(p.id); }
-      } else if (dir === "request" && p.method) r.method = p.method;
-      return r;
-    } catch { return null; }
-  }
-  getPendingCount() { return this.pending.size; }
+    pendingRequests = new Map();
+    parseMessage(raw, direction) {
+        try {
+            const parsed = JSON.parse(raw);
+            if (parsed.jsonrpc !== "2.0")
+                return null;
+            const timestamp = new Date();
+            const result = {
+                raw,
+                parsed,
+                direction,
+                timestamp,
+            };
+            if (direction === "request" && parsed.method && parsed.id !== undefined) {
+                // Track outgoing request
+                const toolName = this.extractToolName(parsed);
+                this.pendingRequests.set(parsed.id, {
+                    method: parsed.method,
+                    toolName,
+                    timestamp,
+                });
+                result.method = parsed.method;
+                result.toolName = toolName;
+            }
+            else if (direction === "response" && parsed.id !== undefined) {
+                // Match with pending request
+                const pending = this.pendingRequests.get(parsed.id);
+                if (pending) {
+                    result.matchedRequestId = parsed.id;
+                    result.method = pending.method;
+                    result.toolName = pending.toolName;
+                    result.latencyMs = timestamp.getTime() - pending.timestamp.getTime();
+                    this.pendingRequests.delete(parsed.id);
+                }
+            }
+            else if (direction === "request" && parsed.method) {
+                // Notification (no id)
+                result.method = parsed.method;
+                result.toolName = this.extractToolName(parsed);
+            }
+            return result;
+        }
+        catch {
+            return null;
+        }
+    }
+    extractToolName(msg) {
+        if (msg.method === "tools/call" && msg.params) {
+            const params = msg.params;
+            return params.name || undefined;
+        }
+        if (msg.method === "resources/read" && msg.params) {
+            const params = msg.params;
+            const uri = params.uri;
+            return uri ? `resource:${uri}` : undefined;
+        }
+        return undefined;
+    }
+    getPendingCount() {
+        return this.pendingRequests.size;
+    }
+    clearStale(maxAgeMs = 30000) {
+        const now = Date.now();
+        for (const [id, req] of this.pendingRequests) {
+            if (now - req.timestamp.getTime() > maxAgeMs) {
+                this.pendingRequests.delete(id);
+            }
+        }
+    }
 }
+//# sourceMappingURL=interceptor.js.map
