@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id                String    @id @default(uuid()) @db.Uuid
+  agentId           String?
+  startedAt         DateTime  @default(now())
+  endedAt           DateTime?
+  metadata          Json?
+  totalCostEstimate Float     @default(0)
+  events            Event[]
+  @@index([agentId])
+  @@index([startedAt])
+}
+
+model Event {
+  id            String   @id @default(uuid()) @db.Uuid
+  sessionId     String   @db.Uuid
+  session       Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  timestamp     DateTime @default(now())
+  direction     String
+  method        String?
+  toolName      String?
+  latencyMs     Int?
+  tokenEstimate Int?
+  costEstimate  Float?
+  @@index([sessionId])
+  @@index([timestamp])
+}
