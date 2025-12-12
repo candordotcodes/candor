@@ -1,21 +1,50 @@
 import { randomUUID } from "node:crypto";
-import type { EventStore, SessionData } from "../storage/index.js";
-
 export class SessionManager {
-  private active = new Map<string, SessionData>();
-  private store: EventStore;
-  constructor(store: EventStore) { this.store = store; }
-  async startSession(agentId?: string): Promise<SessionData> {
-    const s = await this.store.createSession({ id: randomUUID(), agentId, startedAt: new Date() });
-    this.active.set(s.id, s);
-    return s;
-  }
-  async endSession(id: string): Promise<void> {
-    const s = this.active.get(id);
-    if (!s) return;
-    await this.store.endSession(id, s.totalCostEstimate);
-    this.active.delete(id);
-  }
-  getSession(id: string) { return this.active.get(id); }
-  getActiveSessions() { return Array.from(this.active.values()); }
+    activeSessions = new Map();
+    store;
+    constructor(store) {
+        this.store = store;
+    }
+    async startSession(agentId, userId, metadata) {
+        const session = await this.store.createSession({
+            id: randomUUID(),
+            userId,
+            agentId,
+            startedAt: new Date(),
+            metadata,
+        });
+        this.activeSessions.set(session.id, session);
+        return session;
+    }
+    async endSession(sessionId) {
+        const session = this.activeSessions.get(sessionId);
+        if (!session)
+            return;
+        await this.store.endSession(sessionId, session.totalCostEstimate);
+        this.activeSessions.delete(sessionId);
+    }
+    getSession(sessionId) {
+        return this.activeSessions.get(sessionId);
+    }
+    getActiveSessions() {
+        return Array.from(this.activeSessions.values());
+    }
+    updateCost(sessionId, costDelta) {
+        const session = this.activeSessions.get(sessionId);
+        if (session) {
+            session.totalCostEstimate += costDelta;
+        }
+    }
+    async endAllSessions() {
+        const ids = Array.from(this.activeSessions.keys());
+        await Promise.all(ids.map((id) => this.endSession(id)));
+    }
+    getOrCreateSessionForAgent(agentId) {
+        for (const session of this.activeSessions.values()) {
+            if (session.agentId === agentId)
+                return session;
+        }
+        return undefined;
+    }
 }
+//# sourceMappingURL=session-manager.js.map
