@@ -1,17 +1,47 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 model User {
   id            String      @id @default(uuid()) @db.Uuid
   walletAddress String      @unique
   createdAt     DateTime    @default(now())
+  nonces        AuthNonce[]
+  userSessions  UserSession[]
   sessions      Session[]
   alertRules    AlertRule[]
+  costRates     CostRate[]
 }
+
+model AuthNonce {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id])
+  nonce     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model UserSession {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id])
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
+}
+
 model Session {
   id                String    @id @default(uuid()) @db.Uuid
   userId            String?   @db.Uuid
@@ -23,10 +53,12 @@ model Session {
   totalCostEstimate Float     @default(0)
   events            Event[]
   alerts            Alert[]
+
   @@index([userId])
   @@index([agentId])
   @@index([startedAt])
 }
+
 model Event {
   id            String   @id @default(uuid()) @db.Uuid
   sessionId     String   @db.Uuid
@@ -41,10 +73,12 @@ model Event {
   latencyMs     Int?
   tokenEstimate Int?
   costEstimate  Float?
+
   @@index([sessionId])
   @@index([timestamp])
   @@index([toolName])
 }
+
 model AlertRule {
   id         String   @id @default(uuid()) @db.Uuid
   userId     String   @db.Uuid
@@ -55,8 +89,10 @@ model AlertRule {
   enabled    Boolean  @default(true)
   alerts     Alert[]
   createdAt  DateTime @default(now())
+
   @@index([userId])
 }
+
 model Alert {
   id           String    @id @default(uuid()) @db.Uuid
   ruleId       String    @db.Uuid
@@ -68,6 +104,19 @@ model Alert {
   severity     String    @default("warning")
   acknowledged Boolean   @default(false)
   createdAt    DateTime  @default(now())
+
   @@index([ruleId])
   @@index([sessionId])
+}
+
+model CostRate {
+  id               String @id @default(uuid()) @db.Uuid
+  userId           String @db.Uuid
+  user             User   @relation(fields: [userId], references: [id])
+  model            String
+  inputPer1kTokens  Float
+  outputPer1kTokens Float
+  createdAt        DateTime @default(now())
+
+  @@unique([userId, model])
 }
