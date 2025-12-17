@@ -1,24 +1,32 @@
 generator client {
   provider = "prisma-client-js"
 }
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
+model User {
+  id            String      @id @default(uuid()) @db.Uuid
+  walletAddress String      @unique
+  createdAt     DateTime    @default(now())
+  sessions      Session[]
+  alertRules    AlertRule[]
+}
 model Session {
   id                String    @id @default(uuid()) @db.Uuid
+  userId            String?   @db.Uuid
+  user              User?     @relation(fields: [userId], references: [id])
   agentId           String?
   startedAt         DateTime  @default(now())
   endedAt           DateTime?
   metadata          Json?
   totalCostEstimate Float     @default(0)
   events            Event[]
+  alerts            Alert[]
+  @@index([userId])
   @@index([agentId])
   @@index([startedAt])
 }
-
 model Event {
   id            String   @id @default(uuid()) @db.Uuid
   sessionId     String   @db.Uuid
@@ -27,9 +35,39 @@ model Event {
   direction     String
   method        String?
   toolName      String?
+  params        Json?
+  result        Json?
+  error         Json?
   latencyMs     Int?
   tokenEstimate Int?
   costEstimate  Float?
   @@index([sessionId])
   @@index([timestamp])
+  @@index([toolName])
+}
+model AlertRule {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @db.Uuid
+  user       User     @relation(fields: [userId], references: [id])
+  name       String
+  condition  Json
+  webhookUrl String?
+  enabled    Boolean  @default(true)
+  alerts     Alert[]
+  createdAt  DateTime @default(now())
+  @@index([userId])
+}
+model Alert {
+  id           String    @id @default(uuid()) @db.Uuid
+  ruleId       String    @db.Uuid
+  rule         AlertRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  sessionId    String    @db.Uuid
+  session      Session   @relation(fields: [sessionId], references: [id])
+  eventId      String?
+  message      String
+  severity     String    @default("warning")
+  acknowledged Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  @@index([ruleId])
+  @@index([sessionId])
 }
