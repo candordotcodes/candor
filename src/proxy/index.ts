@@ -286,3 +286,4 @@ export class CandorProxy {
     }
 }
 //# sourceMappingURL=index.js.map
+// refactor: extract authenticateRequest method
