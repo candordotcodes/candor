@@ -286,4 +286,4 @@ export class CandorProxy {
     }
 }
 //# sourceMappingURL=index.js.map
-// fix: handle bodySize check on request end
+// refactor: move transport handlers to connectUpstream
