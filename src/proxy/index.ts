@@ -286,4 +286,4 @@ export class CandorProxy {
     }
 }
 //# sourceMappingURL=index.js.map
-// refactor: extract authenticateRequest method
+// fix: handle bodySize check on request end
