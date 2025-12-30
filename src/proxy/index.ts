@@ -286,4 +286,4 @@ export class CandorProxy {
     }
 }
 //# sourceMappingURL=index.js.map
-// refactor: move transport handlers to connectUpstream
+// feat: add proxy getStatus method
