@@ -286,4 +286,4 @@ export class CandorProxy {
     }
 }
 //# sourceMappingURL=index.js.map
-// feat: add proxy getStatus method
+// feat: integrate ws server with proxy lifecycle
