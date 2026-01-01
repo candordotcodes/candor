@@ -112,3 +112,4 @@ export class EventPipeline {
     }
 }
 //# sourceMappingURL=event-pipeline.js.map
+// fix: add max queue size to pipeline
