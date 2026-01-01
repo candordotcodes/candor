@@ -286,4 +286,4 @@ export class CandorProxy {
     }
 }
 //# sourceMappingURL=index.js.map
-// feat: add verbose logging for upstream events
+// refactor: broadcast session end with cost
