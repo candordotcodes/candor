@@ -286,4 +286,4 @@ export class CandorProxy {
     }
 }
 //# sourceMappingURL=index.js.map
-// feat: integrate ws server with proxy lifecycle
+// feat: add verbose logging for upstream events
