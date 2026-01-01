@@ -112,4 +112,4 @@ export class EventPipeline {
     }
 }
 //# sourceMappingURL=event-pipeline.js.map
-// fix: add max queue size to pipeline
+// refactor: serial queue processing in pipeline
