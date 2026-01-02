@@ -112,4 +112,4 @@ export class EventPipeline {
     }
 }
 //# sourceMappingURL=event-pipeline.js.map
-// refactor: serial queue processing in pipeline
+// perf: add session event count tracking
