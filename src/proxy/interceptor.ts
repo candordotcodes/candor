@@ -71,3 +71,4 @@ export class Interceptor extends EventEmitter {
     }
 }
 //# sourceMappingURL=interceptor.js.map
+// feat: add stale request cleanup
