@@ -204,4 +204,4 @@ export class AlertEvaluator {
     }
 }
 //# sourceMappingURL=alert-evaluator.js.map
-// feat: add rules cache with TTL
+// feat: add counter eviction for memory
