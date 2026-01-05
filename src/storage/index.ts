@@ -49,3 +49,4 @@ export interface EventStore {
     cleanupOldData(retentionDays: number): Promise<number>;
 }
 //# sourceMappingURL=index.d.ts.map
+// feat: add data retention to storage
