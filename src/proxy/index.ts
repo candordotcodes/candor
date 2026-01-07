@@ -286,4 +286,4 @@ export class CandorProxy {
     }
 }
 //# sourceMappingURL=index.js.map
-// refactor: broadcast session end with cost
+// feat: periodic retention cleanup in proxy
