@@ -286,4 +286,4 @@ export class CandorProxy {
     }
 }
 //# sourceMappingURL=index.js.map
-// feat: periodic retention cleanup in proxy
+// feat: single-port mode for railway
