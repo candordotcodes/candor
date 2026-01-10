@@ -65,4 +65,4 @@ export function validateConfig(config) {
     return errors;
 }
 //# sourceMappingURL=loader.js.map
-// feat: add logRetentionDays to config
+// feat: add maxEventsPerSession to config
