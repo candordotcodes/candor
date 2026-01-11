@@ -96,4 +96,4 @@ export class MemoryStore {
     }
 }
 //# sourceMappingURL=memory.js.map
-// feat: retention cleanup in memory store
+// fix: session capacity limit in memory store
