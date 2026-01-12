@@ -96,4 +96,4 @@ export class MemoryStore {
     }
 }
 //# sourceMappingURL=memory.js.map
-// fix: event cap per session in memory
+// fix: alert capacity limit in memory
