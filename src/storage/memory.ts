@@ -96,4 +96,4 @@ export class MemoryStore {
     }
 }
 //# sourceMappingURL=memory.js.map
-// fix: alert capacity limit in memory
+// perf: event count cache optimization
