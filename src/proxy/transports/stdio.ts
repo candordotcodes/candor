@@ -115,3 +115,4 @@ export class StdioTransport extends EventEmitter {
     }
 }
 //# sourceMappingURL=stdio.js.map
+// fix: buffer size limit in splitter
