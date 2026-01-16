@@ -83,4 +83,4 @@ export class SSETransport extends EventEmitter {
     }
 }
 //# sourceMappingURL=sse.js.map
-// feat: exponential backoff for SSE
+// refactor: SSE reconnect session reuse
