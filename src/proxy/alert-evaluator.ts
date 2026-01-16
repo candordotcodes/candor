@@ -204,4 +204,4 @@ export class AlertEvaluator {
     }
 }
 //# sourceMappingURL=alert-evaluator.js.map
-// feat: webhook delivery with timeout
+// feat: alert severity mapping
