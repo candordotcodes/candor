@@ -115,4 +115,4 @@ export class StdioTransport extends EventEmitter {
     }
 }
 //# sourceMappingURL=stdio.js.map
-// feat: add send with interception to stdio
+// refactor: flush handler for splitter
