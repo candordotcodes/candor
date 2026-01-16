@@ -204,4 +204,4 @@ export class AlertEvaluator {
     }
 }
 //# sourceMappingURL=alert-evaluator.js.map
-// feat: alert severity mapping
+// feat: human-readable alert messages
