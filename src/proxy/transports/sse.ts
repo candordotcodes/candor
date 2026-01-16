@@ -83,3 +83,4 @@ export class SSETransport extends EventEmitter {
     }
 }
 //# sourceMappingURL=sse.js.map
+// fix: max reconnect in SSE transport
