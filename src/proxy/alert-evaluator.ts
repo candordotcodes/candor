@@ -204,4 +204,4 @@ export class AlertEvaluator {
     }
 }
 //# sourceMappingURL=alert-evaluator.js.map
-// feat: add counter eviction for memory
+// feat: webhook delivery with timeout
