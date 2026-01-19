@@ -204,4 +204,4 @@ export class AlertEvaluator {
     }
 }
 //# sourceMappingURL=alert-evaluator.js.map
-// feat: human-readable alert messages
+// fix: session_duration condition type
