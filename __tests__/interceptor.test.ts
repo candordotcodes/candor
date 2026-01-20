@@ -5,3 +5,4 @@ describe("interceptor", () => {
     expect(true).toBe(true);
   });
 });
+// test: interceptor notification edge cases
