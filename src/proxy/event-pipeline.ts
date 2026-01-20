@@ -112,4 +112,4 @@ export class EventPipeline {
     }
 }
 //# sourceMappingURL=event-pipeline.js.map
-// perf: add session event count tracking
+// fix: missing toolName in verbose log
