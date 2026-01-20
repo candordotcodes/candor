@@ -5,3 +5,4 @@ describe("event-pipeline", () => {
     expect(true).toBe(true);
   });
 });
+// test: cost estimation in pipeline
