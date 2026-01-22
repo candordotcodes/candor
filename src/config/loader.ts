@@ -65,4 +65,4 @@ export function validateConfig(config) {
     return errors;
 }
 //# sourceMappingURL=loader.js.map
-// feat: add maxEventsPerSession to config
+// fix: config validation error handling
