@@ -286,4 +286,4 @@ export class CandorProxy {
     }
 }
 //# sourceMappingURL=index.js.map
-// refactor: use EventStore type in proxy
+// refactor: consolidate upstream types
