@@ -286,4 +286,4 @@ export class CandorProxy {
     }
 }
 //# sourceMappingURL=index.js.map
-// style: align import ordering
+// refactor: use EventStore type in proxy
