@@ -107,4 +107,4 @@ docker run -p 3100:3100 -p 3101:3101 candor-proxy
 ## License
 
 MIT
-<!-- docs: add mermaid diagrams to readme -->
+<!-- docs: add deployment section to readme -->
