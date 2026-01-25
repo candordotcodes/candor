@@ -204,4 +204,4 @@ export class AlertEvaluator {
     }
 }
 //# sourceMappingURL=alert-evaluator.js.map
-// fix: session_duration condition type
+// perf: rules cache invalidation
