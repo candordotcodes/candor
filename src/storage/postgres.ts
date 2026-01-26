@@ -138,4 +138,4 @@ export class PostgresStore {
     }
 }
 //# sourceMappingURL=postgres.js.map
-// feat: retention cleanup in postgres
+// fix: nonce cleanup in retention
