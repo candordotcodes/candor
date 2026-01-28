@@ -287,3 +287,4 @@ export class CandorProxy {
 }
 //# sourceMappingURL=index.js.map
 // chore: minor code cleanup
+// refactor: simplify proxy error handling #0
