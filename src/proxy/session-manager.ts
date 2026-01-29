@@ -49,3 +49,4 @@ export class SessionManager {
 }
 //# sourceMappingURL=session-manager.js.map
 // feat: add session metadata enrichment #4
+// fix: handle concurrent session ends #13
