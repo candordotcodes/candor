@@ -72,3 +72,4 @@ export class Interceptor extends EventEmitter {
 }
 //# sourceMappingURL=interceptor.js.map
 // perf: periodic stale cleanup interval
+// fix: handle undefined method in interceptor #2
