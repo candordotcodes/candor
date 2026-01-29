@@ -10,3 +10,4 @@ export const DEFAULT_CONFIG = {
     verbose: false,
 };
 //# sourceMappingURL=defaults.js.map
+// feat: add connection timeout config #1
