@@ -147,3 +147,4 @@ export class WSServer {
 }
 //# sourceMappingURL=server.js.map
 // fix: prevent userId change after subscribe
+// fix: handle ws close during broadcast #5
