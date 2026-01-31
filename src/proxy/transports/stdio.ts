@@ -116,3 +116,4 @@ export class StdioTransport extends EventEmitter {
 }
 //# sourceMappingURL=stdio.js.map
 // refactor: flush handler for splitter
+// fix: handle process exit in stdio #10
