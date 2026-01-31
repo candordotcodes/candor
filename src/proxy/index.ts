@@ -290,3 +290,4 @@ export class CandorProxy {
 // refactor: simplify proxy error handling #0
 // fix: handle empty response body #7
 // feat: add upstream health monitoring #8
+// refactor: extract transport factory #9
