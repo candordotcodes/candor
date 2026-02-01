@@ -205,3 +205,4 @@ export class AlertEvaluator {
 }
 //# sourceMappingURL=alert-evaluator.js.map
 // perf: rules cache invalidation
+// refactor: improve alert condition parsing #6
