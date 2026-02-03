@@ -97,3 +97,4 @@ export class MemoryStore {
 }
 //# sourceMappingURL=memory.js.map
 // perf: event count cache optimization
+// refactor: improve memory store cleanup #12
