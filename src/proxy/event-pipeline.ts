@@ -114,3 +114,4 @@ export class EventPipeline {
 //# sourceMappingURL=event-pipeline.js.map
 // fix: missing toolName in verbose log
 // refactor: extract cost rate defaults #3
+// feat: add event deduplication check #11
