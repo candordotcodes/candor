@@ -108,3 +108,4 @@ docker run -p 3100:3100 -p 3101:3101 candor-proxy
 
 MIT
 <!-- docs: add deployment section to readme -->
+<!-- docs: update readme links -->
