@@ -66,3 +66,4 @@ export function validateConfig(config) {
 }
 //# sourceMappingURL=loader.js.map
 // fix: config validation error handling
+// refactor: normalize config paths #15
