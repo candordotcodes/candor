@@ -1,4 +1,6 @@
 const MAX_QUEUE_SIZE = 10000;
+const DEDUP_WINDOW_MS = 5000;
+const MAX_DEDUP_ENTRIES = 500;
 const DEFAULT_COST_RATES = {
     inputPer1kTokens: 0.003,
     outputPer1kTokens: 0.015,
@@ -13,6 +15,8 @@ export class EventPipeline {
     processing = false;
     // In-memory event count cache to avoid per-event DB queries
     sessionEventCounts = new Map();
+    // Deduplication: track recent event fingerprints to drop retries
+    recentEvents = new Map();
     constructor(store, alertEvaluator, wsServer, config) {
         this.store = store;
         this.alertEvaluator = alertEvaluator;
@@ -26,6 +30,36 @@ export class EventPipeline {
     /** Reset event count cache for a session (e.g. when session ends) */
     clearSessionCount(sessionId) {
         this.sessionEventCounts.delete(sessionId);
+    }
+    /** Generate a fingerprint for deduplication */
+    fingerprint(message, sessionId) {
+        const parts = [
+            sessionId,
+            message.direction,
+            message.method || "",
+            message.toolName || "",
+            message.parsed?.id ?? "",
+        ];
+        return parts.join("|");
+    }
+    /** Check if an event is a duplicate within the dedup window */
+    isDuplicate(message, sessionId) {
+        const fp = this.fingerprint(message, sessionId);
+        const now = Date.now();
+        // Clean expired entries if map is getting large
+        if (this.recentEvents.size > MAX_DEDUP_ENTRIES) {
+            for (const [key, ts] of this.recentEvents) {
+                if (now - ts > DEDUP_WINDOW_MS) {
+                    this.recentEvents.delete(key);
+                }
+            }
+        }
+        const lastSeen = this.recentEvents.get(fp);
+        if (lastSeen && now - lastSeen < DEDUP_WINDOW_MS) {
+            return true;
+        }
+        this.recentEvents.set(fp, now);
+        return false;
     }
     async process(message, sessionId, userId) {
         // Prevent unbounded queue growth
@@ -53,6 +87,13 @@ export class EventPipeline {
         }
     }
     async processItem(message, sessionId, userId) {
+        // Deduplicate: skip events seen within the last 5s window
+        if (this.isDuplicate(message, sessionId)) {
+            if (this.config.verbose) {
+                console.log(`[pipeline] Dropping duplicate event for session ${sessionId}`);
+            }
+            return;
+        }
         // Check event limit using in-memory cache
         const currentCount = this.sessionEventCounts.get(sessionId) || 0;
         if (currentCount >= this.config.maxEventsPerSession) {
@@ -111,7 +152,3 @@ export class EventPipeline {
         return (tokens / 1000) * rate;
     }
 }
-//# sourceMappingURL=event-pipeline.js.map
-// fix: missing toolName in verbose log
-// refactor: extract cost rate defaults #3
-// feat: add event deduplication check #11
