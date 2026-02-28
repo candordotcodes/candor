@@ -62,10 +62,10 @@ export class CandorProxy {
         this.store
             .cleanupOldData(retentionDays)
             .then((count) => {
-            if (count > 0 && this.config.verbose) {
-                console.log(`[retention] Cleaned up ${count} old records`);
-            }
-        })
+                if (count > 0 && this.config.verbose) {
+                    console.log(`[retention] Cleaned up ${count} old records`);
+                }
+            })
             .catch((err) => console.error("[retention] Cleanup failed:", err));
         setInterval(() => {
             this.store
@@ -140,8 +140,8 @@ export class CandorProxy {
                 body += chunk;
             });
             req.on("end", async () => {
-                if (bodySize > MAX_BODY_SIZE)
-                    return; // Already responded with 413
+                if (res.writableEnded)
+                    return; // Already responded (e.g. 413)
                 try {
                     const message = this.interceptor.parseMessage(body, "request");
                     const userId = req.headers["x-user-id"];
@@ -247,6 +247,11 @@ export class CandorProxy {
                 }
             });
             transport.on("connected", async () => {
+                // End previous session if reconnecting (prevents orphaned sessions)
+                if (connection.sessionId) {
+                    await this.sessionManager.endSession(connection.sessionId);
+                    this.pipeline.clearSessionCount(connection.sessionId);
+                }
                 const session = await this.sessionManager.startSession(config.name);
                 connection.sessionId = session.id;
                 // No userId for pre-configured upstreams
@@ -261,7 +266,7 @@ export class CandorProxy {
         await this.sessionManager.endAllSessions();
         // Stop all transports
         for (const upstream of this.upstreams) {
-            upstream.transport.stop();
+            upstream.transport?.stop();
         }
         // Stop servers
         this.wsServer.stop();

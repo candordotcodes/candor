@@ -97,7 +97,7 @@ export class AlertEvaluator {
                     ruleId: rule.id,
                     sessionId,
                     eventId: event.id,
-                    message: this.buildMessage(rule, condition, event),
+                    message: this.buildMessage(rule, condition, event, sessionId),
                     severity: this.getSeverity(condition),
                 });
                 // Broadcast alert via WebSocket (scoped to user)
@@ -155,14 +155,18 @@ export class AlertEvaluator {
                 return false;
         }
     }
-    buildMessage(rule, condition, event) {
+    buildMessage(rule, condition, event, sessionId) {
         switch (condition.type) {
             case "error_rate":
                 return `Alert "${rule.name}": Error rate exceeded ${(condition.threshold * 100).toFixed(0)}% threshold`;
             case "latency":
                 return `Alert "${rule.name}": Latency ${event.latencyMs}ms exceeded ${condition.threshold}ms threshold`;
-            case "cost_spike":
-                return `Alert "${rule.name}": Cost spike detected, total $${event.costEstimate?.toFixed(4)}`;
+            case "cost_spike": {
+                const key = `${sessionId}:${condition.type}`;
+                const counters = this.counters.get(key);
+                const totalCost = counters?.totalCost || event.costEstimate || 0;
+                return `Alert "${rule.name}": Cost spike detected, session total $${totalCost.toFixed(4)}`;
+            }
             case "tool_failure":
                 return `Alert "${rule.name}": Tool "${event.toolName}" failed`;
             case "event_count":

@@ -46,8 +46,8 @@ export class EventPipeline {
     isDuplicate(message, sessionId) {
         const fp = this.fingerprint(message, sessionId);
         const now = Date.now();
-        // Clean expired entries if map is getting large
-        if (this.recentEvents.size > MAX_DEDUP_ENTRIES) {
+        // Always prune expired entries to prevent unbounded growth
+        if (this.recentEvents.size > MAX_DEDUP_ENTRIES / 2) {
             for (const [key, ts] of this.recentEvents) {
                 if (now - ts > DEDUP_WINDOW_MS) {
                     this.recentEvents.delete(key);

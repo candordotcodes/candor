@@ -15,10 +15,16 @@ export function loadConfig(configPath) {
     }
     // Env var overrides
     const envOverrides = {};
-    if (process.env.CANDOR_PORT)
-        envOverrides.port = parseInt(process.env.CANDOR_PORT);
-    if (process.env.CANDOR_WS_PORT)
-        envOverrides.wsPort = parseInt(process.env.CANDOR_WS_PORT);
+    if (process.env.CANDOR_PORT) {
+        const port = parseInt(process.env.CANDOR_PORT, 10);
+        if (!isNaN(port))
+            envOverrides.port = port;
+    }
+    if (process.env.CANDOR_WS_PORT) {
+        const wsPort = parseInt(process.env.CANDOR_WS_PORT, 10);
+        if (!isNaN(wsPort))
+            envOverrides.wsPort = wsPort;
+    }
     if (process.env.CANDOR_DASHBOARD_URL)
         envOverrides.dashboardUrl = process.env.CANDOR_DASHBOARD_URL;
     if (process.env.DATABASE_URL) {
@@ -29,10 +35,16 @@ export function loadConfig(configPath) {
         envOverrides.storage = process.env.CANDOR_STORAGE;
     if (process.env.CANDOR_API_KEY)
         envOverrides.apiKey = process.env.CANDOR_API_KEY;
-    if (process.env.LOG_RETENTION_DAYS)
-        envOverrides.logRetentionDays = parseInt(process.env.LOG_RETENTION_DAYS);
-    if (process.env.MAX_EVENTS_PER_SESSION)
-        envOverrides.maxEventsPerSession = parseInt(process.env.MAX_EVENTS_PER_SESSION);
+    if (process.env.LOG_RETENTION_DAYS) {
+        const ret = parseInt(process.env.LOG_RETENTION_DAYS, 10);
+        if (!isNaN(ret))
+            envOverrides.logRetentionDays = ret;
+    }
+    if (process.env.MAX_EVENTS_PER_SESSION) {
+        const max = parseInt(process.env.MAX_EVENTS_PER_SESSION, 10);
+        if (!isNaN(max))
+            envOverrides.maxEventsPerSession = max;
+    }
     return {
         ...DEFAULT_CONFIG,
         ...fileConfig,

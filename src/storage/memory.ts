@@ -73,10 +73,12 @@ export class MemoryStore {
                 this.events.delete(id);
             }
         }
-        const beforeAlerts = this.alerts.length;
-        this.alerts = this.alerts.filter((a) => !this.alerts.find((x) => x.id === a.id) || true // keep all - memory store doesn't track timestamps
-        );
-        removed += beforeAlerts - this.alerts.length;
+        // Memory store doesn't track alert timestamps, trim oldest half if over limit
+        if (this.alerts.length > MAX_ALERTS / 2) {
+            const trimCount = Math.floor(this.alerts.length / 2);
+            this.alerts = this.alerts.slice(trimCount);
+            removed += trimCount;
+        }
         return removed;
     }
     evictOldSessions() {
@@ -85,7 +87,7 @@ export class MemoryStore {
             .filter(([, s]) => s.endedAt)
             .sort((a, b) => (a[1].endedAt.getTime() - b[1].endedAt.getTime()));
         const toRemove = ended.length > 0
-            ? ended.slice(0, Math.max(1, ended.length / 2))
+            ? ended.slice(0, Math.max(1, Math.floor(ended.length / 2)))
             : Array.from(this.sessions.entries())
                 .sort((a, b) => a[1].startedAt.getTime() - b[1].startedAt.getTime())
                 .slice(0, 1);
