@@ -59,6 +59,8 @@ npx candor start --port 3100 --config candor.config.json
 | `candor start` | Start the proxy server |
 | `candor init` | Interactive config wizard |
 | `candor status` | Check running services |
+| `candor cost` | Cost breakdown by upstream, tool, session |
+| `candor replay` | Replay a past session's tool calls |
 
 ## Transports
 
@@ -103,6 +105,10 @@ docker run -p 3100:3100 -p 3101:3101 candor-proxy
 
 - [Website](https://candor.codes)
 - [Twitter](https://x.com/candordotcodes)
+
+## CA
+
+`7sLctk9oWtWtBdd39Nu6LSdbjLXjuRxLJW6QCUEypump`
 
 ## License
 
