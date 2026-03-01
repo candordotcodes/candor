@@ -5,6 +5,7 @@ import { initCommand } from "./commands/init.js";
 import { statusCommand } from "./commands/status.js";
 import { costCommand } from "./commands/cost.js";
 import { replayCommand } from "./commands/replay.js";
+import { compareCommand } from "./commands/compare.js";
 const program = new Command();
 program
     .name("candor")
@@ -43,5 +44,10 @@ program
     .option("--speed <speed>", "Replay speed (e.g. 1x, 4x, 10x)", "1x")
     .option("--export <path>", "Export events to JSON file")
     .action(replayCommand);
+program
+    .command("compare <sessionA> <sessionB>")
+    .description("Compare two sessions side by side")
+    .option("--export <path>", "Export comparison to JSON file")
+    .action(compareCommand);
 program.parse();
 //# sourceMappingURL=cli.js.map

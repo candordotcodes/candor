@@ -61,6 +61,7 @@ npx candor start --port 3100 --config candor.config.json
 | `candor status` | Check running services |
 | `candor cost` | Cost breakdown by upstream, tool, session |
 | `candor replay` | Replay a past session's tool calls |
+| `candor compare` | Compare two sessions side by side |
 
 ## Transports
 
