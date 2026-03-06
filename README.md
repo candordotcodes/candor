@@ -1,5 +1,7 @@
 # candor-proxy
 
+> **CA:** [`8Kk1Ud3tysVR7hL8Z7wrHz4DeXBAMvmQ7b7aV3dypump`](https://pump.fun/coin/8Kk1Ud3tysVR7hL8Z7wrHz4DeXBAMvmQ7b7aV3dypump)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://typescriptlang.org)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-green.svg)](https://nodejs.org)
