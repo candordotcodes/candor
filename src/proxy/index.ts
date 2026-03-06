@@ -8,6 +8,7 @@ import { Interceptor } from "./interceptor.js";
 import { StdioTransport } from "./transports/stdio.js";
 import { SSETransport } from "./transports/sse.js";
 import { WSServer } from "../ws/server.js";
+import { TokenGate } from "../token-gate/index.js";
 const MAX_BODY_SIZE = 10 * 1024 * 1024; // 10 MB max request body
 export class CandorProxy {
     config;
@@ -19,6 +20,7 @@ export class CandorProxy {
     httpServer = null;
     upstreams = [];
     interceptor;
+    tokenGate;
     constructor(config) {
         this.config = config;
         // Initialize storage
@@ -37,6 +39,7 @@ export class CandorProxy {
             verbose: config.verbose,
         });
         this.interceptor = new Interceptor();
+        this.tokenGate = new TokenGate({ rpcUrl: config.solanaRpcUrl });
     }
     async start() {
         // Start HTTP proxy server first
